@@ -6,7 +6,7 @@ Repositório para o trabalho interdisciplinar 5.
  - Diogo Miranda.
  - Gustavo Martins.
 
-## Sprints: 
+## Sprints:     
  - [x] Sprint 01 
  - [ ] Sprint 02 
  - [ ] Sprint 03 
