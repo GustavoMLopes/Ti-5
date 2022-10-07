@@ -113,7 +113,8 @@ public class Escalonador {
         do{
             //chegada
             while(indiceChegada < temposChegada.length && tempoGlobal == temposChegada[indiceChegada]){
-                descricaoExecucao += ("Processo " + listaProcessos.get(indiceChegada).getPid() + " chegou no tempo " + temposChegada[indiceChegada] + "\n");
+                descricaoExecucao += ("Processo " + listaProcessos.get(indiceChegada).getPid()
+                        + " chegou no tempo " + temposChegada[indiceChegada] + "\n");
                 listaProntos.add(listaProcessos.get(indiceChegada));
                 if(indiceChegada == 0){
                     atual.executa();
@@ -129,7 +130,8 @@ public class Escalonador {
                 removido.setAwaitTime();
                 //listaProcessos.get(listaProcessos.indexOf(removido)).finalizaProcesso(tempoGlobal);
                 
-                descricaoExecucao += ("O processo " + removido.getPid() + " terminou de executar no tempo " + tempoGlobal + " e gastou " + atual.getExecTime() + " ut\n\n");
+                descricaoExecucao += ("O processo " + removido.getPid() + " terminou de executar no tempo "
+                        + tempoGlobal + " e gastou " + atual.getExecTime() + " ut\n\n");
                 
                 tempoGlobal += trocaContexto; 
                 if(listaProntos.size() > 0){
@@ -157,7 +159,8 @@ public class Escalonador {
         int indiceChegada = 0;
         do{
             while(indiceChegada < temposChegada.length && tempoGlobal == temposChegada[indiceChegada]){
-                descricaoExecucao += ("Processo " + listaProcessos.get(indiceChegada).getPid() + " chegou no tempo " + temposChegada[indiceChegada] + "\n");
+                descricaoExecucao += ("Processo " + listaProcessos.get(indiceChegada).getPid()
+                        + " chegou no tempo " + temposChegada[indiceChegada] + "\n");
                 listaProntos.add(listaProcessos.get(indiceChegada));
                 indiceChegada++;
                 
@@ -184,7 +187,8 @@ public class Escalonador {
                 removido.finalizaProcesso(tempoGlobal);
                 removido.setAwaitTime();
                 //listaProcessos.get(listaProcessos.indexOf(removido)).finalizaProcesso(tempoGlobal);
-                descricaoExecucao += ("O processo " + removido.getPid() + " terminou de executar no tempo " + tempoGlobal + " e gastou " + atual.getExecTime() + "\n");
+                descricaoExecucao += ("O processo " + removido.getPid() + " terminou de executar no tempo "
+                        + tempoGlobal + " e gastou " + atual.getExecTime() + "\n");
                 tempoGlobal += trocaContexto; 
                 if(listaProntos.size() > 0){
                     atual = getMenorBurstTime(listaProntos);
@@ -195,6 +199,60 @@ public class Escalonador {
 
             if(listaProntos.size() > 0){
                 tempoGlobal++;
+                atual.incrementExecTime();
+            }
+        }while(listaProntos.size() > 0);
+    }
+
+    public static void roundRobin(){
+        ArrayList<Processo> listaProntos = new ArrayList<Processo>();
+        Processo atual = listaProcessos.get(0);
+        //listaProntos.add(atual);
+        tempoGlobal = atual.getArrivalTime();
+        int []temposChegada = montaListaTemposChegada();
+        int indiceChegada = 0;
+        int tempoRodada = 0;
+        int tempoFaltante;
+
+        do{
+            tempoFaltante = (atual.getBurstTime() - atual.getExecTime());
+            //chegada
+            while(indiceChegada < temposChegada.length && tempoGlobal == temposChegada[indiceChegada]){
+                descricaoExecucao += ("Processo " + listaProcessos.get(indiceChegada).getPid() +
+                        " chegou no tempo " + temposChegada[indiceChegada] + "\n");
+                listaProntos.add(listaProcessos.get(indiceChegada));
+                if(indiceChegada == 0){
+                    atual.executa();
+                    descricaoExecucao += ("-> Processo " + listaProntos.get(0).getPid() + " executando...\n");
+                }
+                indiceChegada++;
+            }
+            //escalonamento
+            if(tempoRodada >= atual.getQuantum() || tempoFaltante < atual.getQuantum()){
+                Processo removido = listaProntos.remove(listaProntos.indexOf(atual));
+                removido.finalizaProcesso(tempoGlobal);
+                removido.setAwaitTime();
+
+                if (tempoFaltante > 0){
+                    listaProntos.add(removido);
+                    removido.prontificaProcesso();
+                }
+
+                else{
+                    descricaoExecucao += ("O processo " + removido.getPid() + " terminou de executar no tempo "
+                            + tempoGlobal + " e gastou " + atual.getExecTime() + " ut\n\n");
+                }
+
+                if (listaProntos.size() > 0){
+                    atual = listaProntos.get(0);
+                    atual.executa();
+                }
+                tempoRodada = 0;
+            }
+
+            if(listaProntos.size() > 0){
+                tempoGlobal++;
+                tempoRodada++;
                 atual.incrementExecTime();
             }
         }while(listaProntos.size() > 0);
