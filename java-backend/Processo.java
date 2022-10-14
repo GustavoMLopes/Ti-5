@@ -30,8 +30,8 @@ public class Processo implements Comparable<Processo>{
             rep+= "Tempo de espera: " + this.awaitTime + "\n";
         }
         
-        //rep += "Quantum: " + this.quantum + "\n"; 
-        //rep += "State: " + this.state + "\n";
+        rep += "Quantum: " + this.quantum + "\n"; 
+        rep += "Estado: " + this.state + "\n";
         return rep;
     }
 

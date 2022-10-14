@@ -9,12 +9,11 @@ public class Tests {
     public static void main(String[] args){
         criaListas(4);
         Simulador simulador = new Simulador(listaTemposChegadaZero, 0);
-/*
+
         testaArrivalTimeZero(simulador);
         testaChegadaInversa(simulador);
         testaChegadaConcorrente(simulador);
         testaChegadaNaoConcorrente(simulador);
-        */
         testaPreempcao(simulador);
     }
 
@@ -23,7 +22,12 @@ public class Tests {
         try{            
             simulador.executa("sjf", true);
             simulador.geraLog();
-            
+            simulador.executa("sjf", false);
+            simulador.geraLog();         
+            simulador.executa("fcfs", true);
+            simulador.geraLog();   
+            simulador.executa("rr", true);
+            simulador.geraLog();
         } catch(Exception ex) {
             ex.printStackTrace();
         }
@@ -35,6 +39,12 @@ public class Tests {
         try{            
             simulador.executa("sjf", true);
             simulador.geraLog();
+            simulador.executa("sjf", false);
+            simulador.geraLog();         
+            simulador.executa("fcfs", true);
+            simulador.geraLog();   
+            simulador.executa("rr", true);
+            simulador.geraLog();
             
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -45,6 +55,12 @@ public class Tests {
         simulador.setLista(listaPreemptiva);
         try{            
             simulador.executa("sjf", true);
+            simulador.geraLog();
+            simulador.executa("sjf", false);
+            simulador.geraLog();         
+            simulador.executa("fcfs", true);
+            simulador.geraLog();   
+            simulador.executa("rr", true);
             simulador.geraLog();
             
         } catch(Exception ex) {
@@ -58,6 +74,12 @@ public class Tests {
         try{            
             simulador.executa("sjf", true);
             simulador.geraLog();
+            simulador.executa("sjf", false);
+            simulador.geraLog();         
+            simulador.executa("fcfs", true);
+            simulador.geraLog();   
+            simulador.executa("rr", true);
+            simulador.geraLog();
             
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -68,6 +90,12 @@ public class Tests {
         simulador.setLista(listaTemposChegadaNaoConcorrentes);
         try{            
             simulador.executa("sjf", true);
+            simulador.geraLog();
+            simulador.executa("sjf", false);
+            simulador.geraLog();         
+            simulador.executa("fcfs", true);
+            simulador.geraLog();   
+            simulador.executa("rr", true);
             simulador.geraLog();
             
         } catch(Exception ex) {
@@ -82,19 +110,19 @@ public class Tests {
         listaPreemptiva = new ArrayList<Processo>();
         
         for( int i = 0; i < quantidadeProcessos; i++){
-            listaTemposChegadaZero.add(new Processo(("p" + i), (i + 1) * 10 , 0,10));
+            listaTemposChegadaZero.add(new Processo(("p" + i), (i + 1) * 10 , 0,5));
         }
 
         for( int i = 0; i < quantidadeProcessos; i++){
-            listaTemposChegadaConcorrentes.add(new Processo(("p" + i), (i + 1) * 10 , i,10));
+            listaTemposChegadaConcorrentes.add(new Processo(("p" + i), (i + 1) * 10 , i,5));
         }
         
         for( int i = 0; i < quantidadeProcessos; i++){
-            listaBurstTimeInversos.add(new Processo(("p" + i), (quantidadeProcessos - i + 1), 0,10));
+            listaBurstTimeInversos.add(new Processo(("p" + i), (quantidadeProcessos - i + 1), 0,5));
         }
 
         for( int i = 0; i < quantidadeProcessos; i++){
-            listaTemposChegadaNaoConcorrentes.add(new Processo(("p" + i), (i+1) * 10, i*10,10));
+            listaTemposChegadaNaoConcorrentes.add(new Processo(("p" + i), (i+1) * 10, i*10,5));
         }
         listaPreemptiva.add(new Processo("p0", 10, 0, 10));
         listaPreemptiva.add(new Processo("p1", 3, 5, 10));

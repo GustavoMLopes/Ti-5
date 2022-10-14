@@ -65,9 +65,10 @@ public class Simulador {
             sjf(preemptivo);
         }
 
-        else if(escolha.equals("RR") || escolha.equals("ROUND-ROBIN") || escolha.equals("round-robin")){
+        else if(escolha.equals("rr") || escolha.equals("ROUND-ROBIN") || escolha.equals("round-robin")){
             System.out.println("****** ROUND ROBIN ******");
             algoritmoAtual = "roundRobin";
+            roundRobin();
         }
 
         else {
@@ -111,7 +112,7 @@ public class Simulador {
             
             int tempoRestanteMenor = menor.getBurstTime() - menor.getTempoExecucao();
             int tempoRestanteP = p.getBurstTime() - p.getTempoExecucao();
-            
+
             boolean temposRestantesIguais = tempoRestanteMenor == tempoRestanteP;
             boolean temposExecucaoIguais = p.getTempoExecucao() == menor.getTempoExecucao();
             
@@ -181,11 +182,11 @@ public class Simulador {
             atualizaPorChegada(listaProntos);
             boolean chegouAlguem = !(estadoAntesChegada.equals(listaTemposChegada));
             if(preemptivo && chegouAlguem){
-                atual = escalonaSjf(atual, listaProntos, preemptivo);
+                atual = escalona(atual, listaProntos);
             }
     
             else if(atual.getTempoExecucao() >= atual.getBurstTime()){
-                atual = escalonaSjf(atual, listaProntos, preemptivo);
+                atual = escalona(atual, listaProntos);
             }
             tempoGlobal++;
             atual.atualizaExecTime();
@@ -195,37 +196,62 @@ public class Simulador {
         quantidadeExecucoes++;
     }
 
-    private Processo escalona(Processo atual, ArrayList<Processo> listaProntos){
-        atual.finaliza(tempoGlobal);
-
-        if(listaProntos.size() > 0){
-            Processo proximo = listaProntos.remove(0);
-            proximo.executa();
-            tempoGlobal += trocaContexto;
-            return proximo;
-        }
-
-        return atual;
+    private void roundRobin(){
+        ArrayList<Processo> listaProntos = new ArrayList<Processo>();
+        Processo atual = listaProcessos.get(0);
+        tempoGlobal = atual.getArrivalTime();
+        int tempoLocalExecucao = 0;
+        atual.executa();
+        listaTemposChegada.remove(0);
+        indiceProximaChegada = 1;
+        do{
+            atualizaPorChegada(listaProntos);
+            if(tempoLocalExecucao >= atual.getBurstTime() || tempoLocalExecucao >= atual.getQuantum()){
+                atual = escalona(atual, listaProntos);
+                tempoLocalExecucao = 0;
+            }
+            tempoGlobal++;
+            tempoLocalExecucao++;
+            atual.atualizaExecTime();
+        }while(!(listaTemposChegada.size() <= 0 && atual.finalizado()));
+        tempoGlobal --;//remocao do tempo excedente
+        calculaMetricas();
+        quantidadeExecucoes++;
     }
 
-    private Processo escalonaSjf(Processo atual, ArrayList<Processo> listaProntos, boolean preemptivo){
-        if(preemptivo && atual.getBurstTime() > atual.getTempoExecucao()){
+    private Processo escalona(Processo atual, ArrayList<Processo> listaProntos){
+        if(atual.getTempoExecucao() < atual.getBurstTime()){
             atual.prontifica();
             listaProntos.add(atual);
         }
-        else {
+        else{
             atual.finaliza(tempoGlobal);
         }
 
+        Processo proximo = (listaProntos.size() > 0)
+            ? selecionaProximo(indiceProximo(listaProntos), listaProntos)
+            : null;
+        return (proximo == null) ? atual : proximo;
+    }
+
+    private int indiceProximo(ArrayList<Processo> listaProntos){
+        if(algoritmoAtual.contains("sjf")){
+            return listaProntos.indexOf(getMenorBurstTime(listaProntos));
+        }
+        else{
+            return 0;
+        }
+    }
+
+    private Processo selecionaProximo(int indice, ArrayList<Processo>listaProntos){
         if(listaProntos.size() > 0){
-            int indiceProximoProcesso = listaProntos.indexOf(getMenorBurstTime(listaProntos));
-            Processo proximo = listaProntos.remove(indiceProximoProcesso);
+            Processo proximo = listaProntos.remove(indice);
             proximo.executa();
             return proximo;
         }
-        return atual;
+        return null;
     }
-
+    
     private void atualizaPorChegada(ArrayList<Processo> listaProntos){
         while(listaTemposChegada.size() > 0 && tempoGlobal == listaTemposChegada.get(0)){
             listaProntos.add(listaProcessos.get(indiceProximaChegada));
