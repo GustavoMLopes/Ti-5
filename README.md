@@ -8,5 +8,5 @@ Repositório para o trabalho interdisciplinar 5.
 
 ## Sprints:     
  - [x] Sprint 01 
- - [ ] Sprint 02 
+ - [x] Sprint 02 
  - [ ] Sprint 03 
