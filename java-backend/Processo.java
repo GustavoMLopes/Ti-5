@@ -23,6 +23,7 @@ public class Processo implements Comparable<Processo>{
         String rep = "PID: " + this.pid +"\n";
         rep += "Tempo de chegada: " + this.arrivalTime + "\n";
         rep += "Burst Time: " + this.burstTime + "\n";
+
         if(this.state.equals("Finalizado")){
             rep += "Tempo de saida: " + this.finishTime + "\n";
             rep+= "Tempo de execucao: " + this.execTime + "\n";
@@ -40,7 +41,7 @@ public class Processo implements Comparable<Processo>{
     public int getArrivalTime(){ return this.arrivalTime; } 
     public String getState(){ return this.state; } 
     public int getQuantum(){ return this.quantum; } 
-    public int getExecTime(){ return this.execTime; }
+    public int getTempoExecucao(){ return this.execTime; }
     public int getAwaitTime(){ return this.awaitTime; }
     public int getFinishTime(){ return this.finishTime; }
     
@@ -65,12 +66,17 @@ public class Processo implements Comparable<Processo>{
         this.quantum = quantum;
     }
 
-    public void incrementExecTime(){
-        this.execTime = this.execTime + 1;
+    public void atualizaExecTime(){
+        if(this.executando()){
+            this.execTime = this.execTime + 1;
+        }
     }
 
-    public void setAwaitTime(){
-        System.out.println(this.finishTime + " - " + this.arrivalTime + " - " + this.burstTime);
+    public void resetaExecTime(){
+        this.execTime = 0;
+    }
+
+    public void atualizaTempoEspera(){
         this.awaitTime = this.finishTime - this.arrivalTime - this.burstTime; 
     }
 
@@ -79,15 +85,25 @@ public class Processo implements Comparable<Processo>{
     }
 
     // atualizadores do estado do processo
-    public void finalizaProcesso(int tempoFinalizado){ 
-        this.setState("Finalizado");
-        this.setFinishTime(tempoFinalizado); 
+    public void finaliza(int tempoFinalizado){ 
+        if(this.finalizado() == false){
+            this.setState("Finalizado");
+            this.setFinishTime(tempoFinalizado); 
+            this.atualizaTempoEspera();
+        }
     }
-
-    public void bloqueiaProcesso(){ this.setState("Bloqueado"); }
-    public void prontificaProcesso(){ this.setState("Pronto"); }
+    
+    public void bloqueia(){ this.setState("Bloqueado"); }
+    public void prontifica(){ this.setState("Pronto"); }
     public void executa(){ this.setState("Executando"); }
-
+    
+    //checagem dos estados
+    public boolean finalizado(){ return this.state.equals("Finalizado"); }
+    public boolean bloqueado(){ return this.state.equals("Bloqueado"); }
+    public boolean executando(){ return this.state.equals("Executando"); }
+    public boolean pronto(){ return this.state.equals("Pronto"); }
+    
+    
     @Override
     public int compareTo(Processo p) {
         return (this.arrivalTime - p.arrivalTime);
