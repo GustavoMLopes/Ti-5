@@ -13,14 +13,14 @@ npm run dev:server
 #### Get
  - ``/status``: Retorna os status da simulação
  - ``/exec``: Faz a simulação podendo passar o tipo de algoritmo pelo parâmetro ``scheduling`` e o delay de troca de contexto pelo parâmetro ``contextSwitch``.Após executar o escalonamento a rota retorna as seguintes informações:
-    - ``currentAlgorithm``: Algoritmo utilizado para o escalonamento atual.
-    - ``cpuUsage``: Utilização da cpu em percentagem.
-    - ``throughput``: Vazão do simulador.
-    - ``contextSwitch``: Troca de contexto, definida por parâmetro no método exec.
-    - `simulationTime`: Tempo total fictício gasto pela simulação.
-    - `quantProcesses`: Quantidade de processos escalonados.
-    - `finalState` : Lista de estado final com todos os processos finalizados.   
-    - `simulatioFrames`:  Lista dos estados dos processos em cada etapa da simulação.
+    - **currentAlgorithm**: Algoritmo utilizado para o escalonamento atual.
+    - **cpuUsage**: Utilização da cpu em percentagem.
+    - **throughput**: Vazão do simulador.
+    - **contextSwitch**: Troca de contexto, definida por parâmetro no método exec.
+    - **simulationTime**: Tempo total fictício gasto pela simulação.
+    - **quantProcesses**: Quantidade de processos escalonados.
+    - **finalState** : Lista de estado final com todos os processos finalizados.   
+    - **simulatioFrames**:  Lista dos estados dos processos em cada etapa da simulação.
  - ``/log``: Retorna informações de documentação do simulador.
  - ``/listAll``: Retorna a lista de processos inseridas no simulador.
  #### Post
