@@ -144,8 +144,6 @@ export default class Simulador{
     }
 
     private computeMetrics(){
-        console.log(this._simulationTime);
-        console.log(this.computeRequestedTime())
         this._cpuUsage = (this.computeRequestedTime() / (this._simulationTime)) * 100;
         this._trhoughput = (this._simulationTime) / this._processList.length; 
     }
