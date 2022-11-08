@@ -1,5 +1,5 @@
 import express from 'express';
-import Simulador from './Simulador';
+import Simulador, { tipoEscalonamento } from './Simulador';
 import Processo, { ProcessDto } from './Processo';
 const app = express();
 const porta = 3000;
@@ -30,6 +30,7 @@ app.get('/log', (req, res)=>{
 })
 
 app.get('/exec', (req, res) =>{
+    simulador.changeCurrentAlgorithm(req.query.scheduling);
     simulador.exec();
     return res.status(200).send(simulador.logJSONRepresentation());
 })

@@ -53,6 +53,25 @@ export default class Simulador{
     public set processList(processList: Processo[]){
         this._processList = this.cloneList(processList);
     }
+
+    public changeCurrentAlgorithm(algorithm:any){
+        if(algorithm != undefined){
+            const choice = algorithm.toLowerCase();
+            if(choice == tipoEscalonamento.sjf.toLowerCase()|| choice == 'sj' || choice == 'sjf'){
+                this._currentAlgorithm = tipoEscalonamento.sjf;
+            }    
+            else if(choice == tipoEscalonamento.sjf_np.toLowerCase() || choice == 'sjfnp' || choice == 'sjf_np' || choice == 'sjf-np'){
+                this._currentAlgorithm = tipoEscalonamento.sjf_np;
+            }
+            else if(choice == tipoEscalonamento.round_robin.toLowerCase() || choice == 'rr'){
+                this._currentAlgorithm = tipoEscalonamento.round_robin;
+            }
+            else{
+                this._currentAlgorithm = tipoEscalonamento.fcfs;
+            }
+        }
+    }
+
     public get processList(){
         return this.cloneList(this._processList);
     }
@@ -64,18 +83,18 @@ export default class Simulador{
             if(this._currentAlgorithm == tipoEscalonamento.fcfs){
                 //first come first service
                 this.fcfs();
-                this.log();
             }
             else if(this._currentAlgorithm == tipoEscalonamento.sjf){
-                //shortest job first preemptivo
+                this.sjf(true);
             }   
 
             else if(this._currentAlgorithm == tipoEscalonamento.sjf_np){
-                //shortest job first nao preemptivo
+                this.sjf(false);
             }
             else{
-                //round robin
+                this.roundRobin();
             }
+            this.log();
         }
     }
 
@@ -99,6 +118,14 @@ export default class Simulador{
         }while(!(this._arrivalTimes.length <= 0 && atual.finalizado()));
         this._simulationTime --;//remocao do tempo excedente
         this.computeMetrics();
+    }
+
+    private sjf(preemptive: boolean){
+        //implementar o sjf aqui
+    }
+
+    private roundRobin(){
+        //implementar o round robin aqui
     }
 
     private escalonate(atual: Processo, listaProntos:Processo[]){
@@ -126,11 +153,10 @@ export default class Simulador{
     private computeRequestedTime():number{
         let sum: number;
         sum = 0;
-        console.log(sum + 1);
         this._processList.forEach((p: Processo)=>{
             sum = sum + p.burstTime;
         })
-        console.log(sum)
+
         return sum;
     }
 
@@ -197,6 +223,7 @@ export default class Simulador{
         this._simulationTime = 0;
         this._cpuUsage = 0;
         this._trhoughput = 0;
+        this._simulationFrames = []
         //this._nextArrivalIndex = 0;
         this._processList.forEach((p:Processo)=>{
             p.resetaExecTime();
