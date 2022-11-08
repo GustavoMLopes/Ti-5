@@ -24,4 +24,4 @@ npm run dev:server
  - ``/log``: Retorna informações de documentação do simulador.
  - ``/listAll``: Retorna a lista de processos inseridas no simulador.
  #### Post
- - ``/insertList``: Insere uma nova lista de 
+ - ``/insertList``: Insere uma nova lista de processos.
