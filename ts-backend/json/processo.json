@@ -1,0 +1,6 @@
+{
+    "pid": "p1,p2,p3",
+    "arrivalTime": "0",
+    "burstTime": "15",
+    "quantum": "20"
+}

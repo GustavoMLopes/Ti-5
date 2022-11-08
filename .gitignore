@@ -1,2 +1,3 @@
 logs/
 *.class
+node_modules

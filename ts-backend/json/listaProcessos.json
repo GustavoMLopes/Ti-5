@@ -1,0 +1,32 @@
+[
+    {
+        "pid": "p1",
+        "arrivalTime": 0,
+        "burstTime": 10,
+        "quantum": 20
+    },
+    {
+        "pid": "p2",
+        "arrivalTime": 1,
+        "burstTime": 10,
+        "quantum": 20
+    },
+    {
+        "pid": "p3",
+        "arrivalTime": 2,
+        "burstTime": 10,
+        "quantum": 20
+    },
+    {
+        "pid": "p4",
+        "arrivalTime": 3,
+        "burstTime": 10,
+        "quantum": 20
+    },
+    {
+        "pid": "p5",
+        "arrivalTime": 4,
+        "burstTime": 10,
+        "quantum": 20
+    }
+]
