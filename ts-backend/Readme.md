@@ -1,5 +1,6 @@
 # Backend Typescript
 ### Setup do projeto
+O simulador sempre é criado sem nenhum processo ao iniciar o servidor. Portanto, para realizar simulações deve-se inserir a lista de processos pela rota ``/insertList`` e depois executar o escalonamento pela rota ``/exec``.
 Para instalar o projeto basta utilizar o comando abaixo:
 ```
 npm install
