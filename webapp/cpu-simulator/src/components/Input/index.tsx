@@ -99,6 +99,12 @@ type InputProps = {
   setPriorities: Dispatch<SetStateAction<number[]>>;
 }
 
+type Process = {
+  job: string;
+  arrivalTime: number;
+  burstTime: number;
+}
+
 const Input = (props: InputProps) => {
   const [selectedAlgo, setSelectedAlgo] = useState(defaultOption);
   const [arrivalTime, setArrivalTime] = useState('');
@@ -117,15 +123,20 @@ const Input = (props: InputProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    let processes: Array<Process> = JSON.parse(localStorage.getItem('processes')) == null ? [] : JSON.parse(localStorage.getItem('processes'));
 
-    const arrivalTimeArr = arrivalTime
-      .trim()
-      .split(/\s+/)
-      .map((at) => parseInt(at));
-    const burstTimeArr = burstTime
-      .trim()
-      .split(/\s+/)
-      .map((bt) => parseInt(bt));
+    const arrivalTimeArr = [];
+    processes.forEach(process => {
+      arrivalTimeArr.push(process.arrivalTime)
+    });
+
+    const burstTimeArr = [];
+    processes.forEach(process => {
+      burstTimeArr.push(process.burstTime)
+    })
+
+    // TODO
     const timeQuantumInt = parseInt(timeQuantum);
     let prioritiesArr = priorities
       .trim()
@@ -155,19 +166,25 @@ const Input = (props: InputProps) => {
       return;
     }
 
+    if (selectedAlgo.value === 'NPP' || selectedAlgo.value === 'PP') {
+      if (priorities.trim() === '') {
+        prioritiesArr = arrivalTimeArr.map(() => 0);
+      } else if (
+        prioritiesArr.length !== arrivalTimeArr.length ||
+        prioritiesArr.length !== arrivalTimeArr.length
+      ) {
+        invalidInputSwal(
+          'Arrival times, burst times and priorities should have equal length'
+        );
+        return;
+      }
+    }
+
     props.setSelectedAlgorithm(selectedAlgo);
     props.setArrivalTime(arrivalTimeArr);
     props.setBurstTime(burstTimeArr);
     props.setTimeQuantum(timeQuantumInt);
     props.setPriorities(prioritiesArr);
-  };
-
-  const handleArrivalTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setArrivalTime(e.target.value);
-  };
-
-  const handleBurstTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBurstTime(e.target.value);
   };
 
   const handleTimeQuantumChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,33 +197,13 @@ const Input = (props: InputProps) => {
 
   return (
     <StyledInput>
-      <h1>Input</h1>
+      <h1>Select</h1>
       <Form onSubmit={handleSubmit}>
         <fieldset>
           <label htmlFor="react-select-algo">Algorithm</label>
           <AlgorithmSelect
             selectedAlgo={selectedAlgo}
             setSelectedAlgo={setSelectedAlgo}
-          />
-        </fieldset>
-        <fieldset>
-          <label htmlFor="arrival-time">Arrival Times</label>
-          <input
-            onChange={handleArrivalTimeChange}
-            type="text"
-            id="arrival-time"
-            placeholder="e.g. 0 2 4 6 8"
-            ref={arrivalTimeRef}
-          />
-        </fieldset>
-        <fieldset>
-          <label htmlFor="burst-time">Burst Times</label>
-          <input
-            onChange={handleBurstTimeChange}
-            type="text"
-            id="burst-time"
-            placeholder="e.g. 2 4 6 8 10"
-            ref={burstTimeRef}
           />
         </fieldset>
         {selectedAlgo.value === 'RR' && (
@@ -220,6 +217,18 @@ const Input = (props: InputProps) => {
               placeholder="e.g. 3"
               min="1"
               step="1"
+            />
+          </fieldset>
+        )}
+        {(selectedAlgo.value === 'NPP' || selectedAlgo.value === 'PP') && (
+          <fieldset>
+            <label htmlFor="priorities">Priorities</label>
+            <input
+              defaultValue={priorities}
+              onChange={handlePrioritiesChange}
+              type="text"
+              id="priorities"
+              placeholder="Lower # = higher priority"
             />
           </fieldset>
         )}

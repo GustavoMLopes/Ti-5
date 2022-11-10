@@ -3,6 +3,8 @@ import { fcfs } from './fcfs';
 import { sjf } from './sjf';
 import { srtf } from './srtf';
 import { rr } from './rr';
+import { npp } from './npp'
+import { pp } from './pp'
 
 export type chartInfoType = {
     job: string;
@@ -35,6 +37,10 @@ export const solve = (
         return srtf(arrivalTime, burstTime);
       case 'RR':
         return rr(arrivalTime, burstTime, timeQuantum);
+      case 'NPP':
+        return npp(arrivalTime, burstTime, priorities);
+      case 'PP':
+        return pp(arrivalTime, burstTime, priorities);
       default:
         break;
     }

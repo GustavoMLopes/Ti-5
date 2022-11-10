@@ -145,7 +145,7 @@ const GranttChart = ({ ganttChartInfo }: ChartProps) => {
   
     return (
       <Container ref={containerEl}>
-        <Title>Gantt Chart</Title>
+        <Title>Gráfico</Title>
         {containerWidth !== null && containerWidth <= timeContainerWidth && (
           <>
             {Array.from({ length: numberOfLines }).map((_, ind) => {

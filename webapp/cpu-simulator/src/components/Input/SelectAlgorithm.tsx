@@ -8,7 +8,7 @@ import Styled from 'styled-components';
   SRTF - Shortest Remaining Time First
   RR - Round-Robin
 */
-export type AlgorithmType = 'FCFS' | 'SJF' | 'SRTF' | 'RR';
+export type AlgorithmType = 'FCFS' | 'SJF' | 'SRTF' | 'RR' | 'NPP' | 'PP';
 export type OptionType = {
     value: AlgorithmType;
     label: string;
@@ -32,7 +32,15 @@ const options: OptionType[] = [
     {
     value: 'RR',
     label: 'Round-Robin, RR',
-    }
+    },
+    {
+      value: 'NPP',
+      label: 'Priority (non-preemptive)',
+    },
+    {
+      value: 'PP',
+      label: 'Priority (preemptive)',
+    },
 ]
 
 type AlgoSelectProps = {

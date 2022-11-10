@@ -6,6 +6,10 @@ import Input from '../components/Input';
 import { media } from '../components/GlobalStyle.css'
 import Output from '../components/Output';
 
+import AlgoForm from '../components/Form'
+
+import ListProcess from '../components/ListProcess'
+
 const Main = Styled.main`
   display: flex;
   ${media['1050']`flex-direction: column;`}
@@ -28,13 +32,17 @@ export default function Home() {
   const [burstTime, setBurstTime] = useState<number[]>([]);
   const [timeQuantum, setTimeQuantum] = useState<number>();
   const [priorities, setPriorities] = useState<number[]>([]);
-
+  
   return (
     <div>
       <Head>
         <title>CPU Process Scheduling Solver</title>
       </Head>
-      
+    <Main className='container'> 
+    <AlgoForm/>
+    <ListProcess/>
+    </Main>
+
     <Main className='container'>
       <Input
         selectedAlgorithm={selectedAlgo}
@@ -52,7 +60,6 @@ export default function Home() {
           priorities={priorities}
       />
     </Main>
-
     </div>
   );
 }

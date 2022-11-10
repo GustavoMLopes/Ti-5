@@ -96,7 +96,7 @@ const Output = ({
             <Header>
                 <h1>Output</h1>
             </Header>
-            <Text>Gantt chart and table will be shown here</Text>
+            <Text>O gráfico e a tabela de processos serão mostrados aqui</Text>
             </StyledOutput>
         );
         } else {
