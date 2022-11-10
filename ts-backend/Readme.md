@@ -28,6 +28,6 @@ npm run dev:server
  - ``/insertList``: Insere uma nova lista de processos.
  
  ### Exemplos de rota
- Round Robin com troca de contexto 0: `` http://localhost:3000/exec?scheduling=rr&contextSwitch=0``
- 
- Round Robin com troca de contexto 2: `` http://localhost:3000/exec?scheduling=fifo&contextSwitch=2``
+  - SJF Preemptivo: `` http://localhost:3000/exec?scheduling=sjf``
+  - Round Robin com troca de contexto 0: `` http://localhost:3000/exec?scheduling=rr&contextSwitch=0``
+  - FCFS com troca de contexto 2: `` http://localhost:3000/exec?scheduling=fifo&contextSwitch=2``
