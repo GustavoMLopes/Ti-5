@@ -1,4 +1,4 @@
-# Ti-5 🚀
+# Ti-5 👾
 Repositório para o trabalho interdisciplinar V.
 ## Integrantes do grupo:
  - Bruna Lopes.
