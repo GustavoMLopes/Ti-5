@@ -121,11 +121,81 @@ export default class Simulador{
     }
 
     private sjf(preemptive: boolean){
-        //implementar o sjf aqui
+        let listaProntos: Processo[];
+        listaProntos = [];
+        this._nextArrivalIndex = 1;
+        this.updateByArrival(listaProntos);
+        let indicePrimeiroProcesso = listaProntos.indexOf(this.getMinorBurstTime(listaProntos));
+        let atual = listaProntos.splice(indicePrimeiroProcesso, 1)[0];
+
+        do {
+            let estadoAntesChegada = this._arrivalTimes.map(time => time);
+            this.updateByArrival(listaProntos);
+            const chegouAlguem = !(this.arraysEqual(estadoAntesChegada, this._arrivalTimes));
+
+
+            if (preemptive && chegouAlguem){
+                atual = this.escalonate(atual, listaProntos);
+            }
+            if (atual.execTime >= atual.burstTime){
+                atual = this.escalonate(atual, listaProntos);
+            }
+            this._simulationFrames.push(this.createFrame());
+            this._simulationTime++;
+            atual.atualizaExecTime();
+        }while (!(this._arrivalTimes.length <= 0 && atual.finalizado()));
+        this._simulationTime--;
+        this.computeMetrics();
     }
 
+    private compareList(list1: number[], list2: number[]){
+        let equals = true;
+        list1.filter(function(element) {
+            if (list2.indexOf(element) == -1) {  
+              equals = false;
+            }
+        });
+        return equals
+    }
+    private arraysEqual(a:number[], b:number[]) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+      
+        // If you don't care about the order of the elements inside
+        // the array, you should sort both arrays here.
+        // Please note that calling sort on an array will modify that array.
+        // you might want to clone your array first.
+      
+        for (var i = 0; i < a.length; ++i) {
+          if (a[i] !== b[i]) return false;
+        }
+        return true;
+      }
+    
     private roundRobin(){
-        //implementar o round robin aqui
+        let listaProntos:Processo[];
+        listaProntos = [];
+        let atual = this._processList[0];
+        this._simulationTime = atual.arrivalTime;
+        atual.executa();
+        this._arrivalTimes.splice(0, 1);
+        this._nextArrivalIndex = 1;
+        let tempoLocalExecucao = 0;
+        do{
+            this.updateByArrival(listaProntos);
+            if(tempoLocalExecucao >= atual.burstTime || tempoLocalExecucao >= atual.quantum) {
+                atual = this.escalonate(atual, listaProntos);
+                tempoLocalExecucao = 0;
+            }
+            this._simulationFrames.push(this.createFrame());
+            atual.atualizaExecTime();
+            this._simulationTime++;
+            tempoLocalExecucao++;
+        }while(!(this._arrivalTimes.length <= 0 && atual.finalizado()));
+        this._simulationTime --;
+        this.computeMetrics();
+
     }
 
     private escalonate(atual: Processo, listaProntos:Processo[]){
@@ -237,11 +307,16 @@ export default class Simulador{
         let data = "****** SIMULAÇÂO ******\n";
         data += `Troca de contexto: ${this._contextSwitch}\n`;
         data += `Tempo de simulação: ${this._simulationTime}\n`;
-        data += `Algoritmo de escalonamento: ${this._currentAlgorithm}\n\n`
+        data += `Throughput: ${this._trhoughput}\n`;
+        data+= `Uso de CPU ${this._cpuUsage}\n`;
+        data+=`Troca de Contexto:  ${this._contextSwitch}\n`,
+        data+=`Quantidade de processos: ${this._processList.length}\n`;
+        data += `Algoritmo de escalonamento: ${this._currentAlgorithm}\n`;
         data +='Lista de Processos: \n';
         this._processList.forEach(p =>{
             data += p.stringRepresentation() + '\n' 
         });
+
                 //Verifica se não existe
         if (!fs.existsSync(this._logPath)){
             //Efetua a criação do diretório
