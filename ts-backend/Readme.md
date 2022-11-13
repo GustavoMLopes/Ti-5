@@ -26,3 +26,8 @@ npm run dev:server
  - ``/listAll``: Retorna a lista de processos inseridas no simulador.
  #### Post
  - ``/insertList``: Insere uma nova lista de processos.
+ 
+ ### Exemplos de rota
+  - SJF Preemptivo: `` http://localhost:3000/exec?scheduling=sjf``
+  - Round Robin com troca de contexto 0: `` http://localhost:3000/exec?scheduling=rr&contextSwitch=0``
+  - FCFS com troca de contexto 2: `` http://localhost:3000/exec?scheduling=fifo&contextSwitch=2``
